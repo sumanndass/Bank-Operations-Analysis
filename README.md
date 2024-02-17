@@ -4,7 +4,7 @@
 - [Tools Used](#tools-used)
 - [﻿Data Cleaning/Preparation](﻿#data-cleaning/preparation)
 - [Data Analysis](#data-analysis)
-- [Result/Findings](#Result/Findings)
+- [Result/Findings](#result/findings)
 - [Recommendations](#recommendations)
 - [Limitations](#limitations)
 - [References](#references)

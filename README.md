@@ -2,9 +2,9 @@
 ## Table of Content
 - [Business Integrity](#business-integrity)
 - [Tools Used](#tools-used)
-- [﻿Data Cleaning/Preparation](﻿#data-cleaning/preparation)
+- [﻿Data Cleaning or Preparation](﻿#data-cleaning-or-preparation)
 - [Explanatory Data Analysis](#explanatory-data-analysis)
-- [Result/Findings](#result/findings)
+- [Result or Findings](#result-or-findings)
 - [Recommendations](#recommendations)
 - [Limitations](#limitations)
 - [References](#references)
@@ -39,7 +39,7 @@
 - Power BI - Reports, Visualization -- [Download Here](https://powerbi.microsoft.com/en-us/downloads/)
 - Excel - Data Loadings -- [Download Here](https://www.microsoft.com/en-us/microsoft-365/download-office)
 
-### ﻿Data Cleaning/Preparation
+### ﻿Data Cleaning or Preparation
 1. In the initial data preparation phase, we performed the following tasks:
 2. Data loading and inspection.
 3. Handling missing values.
@@ -53,7 +53,7 @@ Include some interesting code/features worked with
    ```
 3. question 2
 
-### Result/Findings
+### Result or Findings
 1. The analysis results are summarized as follows:
 2. The company's sales have been steadily increasing over the past year, with a noticeable peak during the holiday season.
 3. Product Category A is the best-performing category in terms of sales and revenue. Customer segments with high lifetime value (LTV) should be targeted for marketing efforts.

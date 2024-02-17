@@ -3,6 +3,7 @@
 - [Overview](#overview)
 - [Business Integrity](#business-integrity)
 - [Tools Used](#tools-used)
+- [Database Creation and Data Loading](#database-creation-and-data-loading)
 - [﻿Data Cleaning or Preparation](﻿#data-cleaning-or-preparation)
 - [Explanatory Data Analysis](#explanatory-data-analysis)
 - [Result or Findings](#result-or-findings)
@@ -42,6 +43,123 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 - T-SQL - Data Analysis, Reports -- [Download Here](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
 - Power BI - Reports, Visualization -- [Download Here](https://powerbi.microsoft.com/en-us/downloads/)
 - Excel - Data Loadings -- [Download Here](https://www.microsoft.com/en-us/microsoft-365/download-office)
+
+### Database Creation and Data Loading
+- ERD Modelling
+  
+- create a database named ‘bank’
+   ```sql
+   create database bank
+   ```
+- use the 'bank' database
+   ```sql
+   use bank
+   ```
+- first create those tables which have only primary key and no foreign keys.
+- create a 'product_table'
+   - col_name – data_type - remarks
+   - prod_id – contains only 2 character – primary key
+   - prod_name – maximum allowed 20 character – null not allowed
+   ```sql
+   create table product_table
+   (
+	   prod_id      char(2)       primary key,
+	   prod_name    varchar(20)
+   )
+   ```
+- Insert into 'product_table'
+   ```sql
+   insert into product_table values
+   ('FD', 'Fixed Deposit'),
+   ('LA', 'Loan Account'),
+   ('SB', 'Savings Bank'),
+   ('CA', 'Current Account'),
+   ('RD', 'Recurring Deposit')
+   ```
+- create a 'region_table'
+   - col_name – data_type - remarks
+   - reg_id – integer – primary key
+   - reg_name - contains only 6 character - null not allowed
+   ```sql
+   create table region_table
+   (
+	   reg_id      int      primary key,
+	   reg_name    char(6)	not null     check(reg_name in ('North', 'East', 'South', 'West'))
+   )
+   ```
+- Insert into 'region_table'
+   ```sql
+   insert into region_table values(1, 'North'), (2, 'East'), (3, 'South'), (4, 'West')
+   ```
+- create a 'staff_table'
+   - col_name – data_type - remarks
+   - staff_id – interger – primary key
+   - staff_name – maximum allowed 40 character – null not allowed
+   - designation – maximum allowed 2 character – null not allowed
+   ```sql
+   create table staff_table
+   (
+	   staff_id      int          primary key,
+	   staff_name    varchar(40)	not null,
+      designation   varchar(2)	not null      check(designation in ('BM', 'AM', 'OF', 'HC', 'C'))
+   )
+   ```
+- Insert into 'staff_table'
+   ```sql
+   insert into staff_table values
+  (1,'Brittany Nath', 'BM'),
+  (2,'Karly Sudha', 'AM'),
+  (3,'Slade Nath', 'AM'),
+  (4,'Anika Srini', 'OF'),
+  (5,'Cairo Muthu', 'OF'),
+  (6,'Brennan Dhawan', 'OF'),
+  (7,'Robert Kumar', 'HC'),
+  (8,'Amal Joshi', 'HC'),
+  (9,'Barrett Sahni', 'C'),
+  (10,'Shafira Sahni', 'C'),
+  (11,'Angela Engineer', 'C'),
+  (12,'Ivor Saxena', 'C'),
+  (13,'Yeo Malik', 'C'),
+  (14,'Karleigh Ranga', 'C'),
+  (15,'Damian Raji', 'C')
+   ```
+- create a 'branch_table'
+   - col_name – data_type - remarks
+   - br_id – maximum allowed 4 character – primary key
+   - br_name – maximum allowed 20 characters, same as city name – null not allowed
+   - br_add – maximum allowed 70 character – null not allowed
+   - br_state – maximum allowed 20 character – null not allowed
+   - br_zipcode – only 6 characters allowed – null not allowed
+   - reg_id – integer – foreign key of region_table(reg_id), null not allowed
+   ```sql
+   create table branch_table
+   (
+	br_id        varchar(4)      primary key,
+	br_name      varchar(20)	not null,
+	br_add       varchar(70)	not null,
+	br_state     varchar(20)	not null,
+	br_zipcode   char(6)         not null,
+	reg_id       int             not null   foreign key references region_table(reg_id)
+	on delete cascade on update cascade
+   )
+   ```
+- Insert into 'branch_table'
+   ```sql
+   insert into staff_table values
+  ('BR1', 'Delhi', '248, Sant Nagar, East Of Kailash', 'New Delhi', '110065', 1),
+  ('BR2', 'Kolkata', 'Y8, Block - EP, Sector V Salt Lake', 'West Bengal', '700091', 2),
+  ('BR3', 'Haryana', 'B 448 1st Floor, Nehru Ground', 'Haryana', '122001', 1),
+  ('BR4', 'Aligarh', 'Mishrilal Colony Gambhir, Pura', 'Uttar Pradesh', '202001', 1),
+  ('BR5', 'Bangalore', 'No.18,chitrakootapts,18thcrs,mlswrm, Malleswaram', 'Karnataka', '560055', 3),
+  ('BR6', 'Bhopal', 'Plot 16, Ground Floor, Amar Stambh, Zone 1, MP Nagar', 'Madhya Pradesh', '462011', 1),
+  ('BR7', 'Guwahati', '250 Jatia, Kahilipara', 'Assam', '781019', 2),
+  ('BR8', 'Patna', 'Nehru Nagar, Patliputra Colony', 'Bihar', '800013', 2),
+  ('BR9', 'Cochin', '343, Town Railway Rd, Hill View', 'Kerala', '682020', 3),
+  ('BR10', 'Vadodara', 'Maruti Appt, B/h Wadi Shak Market, Pratapnagar', 'Gujarat', '390017', 4),
+  ('BR11', 'Chennai', '61, R K Mutt Road Mandevli', 'Tamil Nadu', '600028', 3),
+  ('BR12', 'Mumbai', '11, Prakash, Banganga X Road, Malabar Hill', 'Maharashtra', '400006', 4),
+  ('BR13', 'Jalandhar', 'WQ 265, Nr Adda Basti Sheikh', 'Punjab', '144002', 4)
+   ```
 
 ### ﻿Data Cleaning or Preparation
 In the initial data preparation phase, we performed the following tasks:

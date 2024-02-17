@@ -1,5 +1,6 @@
 # Bank Operation Analysis
 ## Table of Content
+- [Overview](#overview)
 - [Business Integrity](#business-integrity)
 - [Tools Used](#tools-used)
 - [﻿Data Cleaning or Preparation](﻿#data-cleaning-or-preparation)
@@ -8,6 +9,9 @@
 - [Recommendations](#recommendations)
 - [Limitations](#limitations)
 - [References](#references)
+
+### Overview
+End to end erd modelling, database creation, data loading, data cleaning, data visualization and reporting project on banking operations.
 
 ### Business Integrity
 1.	Bank offers 5 kinds of products. Like Fixed Deposit (FD), Loan Account (LA), Savings Bank (SB), Current Account (CA), Recurring Deposit (RD). Product table has Product ID, Product Name columns.
@@ -40,10 +44,10 @@
 - Excel - Data Loadings -- [Download Here](https://www.microsoft.com/en-us/microsoft-365/download-office)
 
 ### ﻿Data Cleaning or Preparation
-1. In the initial data preparation phase, we performed the following tasks:
-2. Data loading and inspection.
-3. Handling missing values.
-4. Data cleaning and formatting.
+In the initial data preparation phase, we performed the following tasks:
+1. Data loading and inspection.
+2. Handling missing values.
+3. Data cleaning and formatting.
 
 ### Explanatory Data Analysis
 Include some interesting code/features worked with

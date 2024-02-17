@@ -3,7 +3,7 @@
 - [Business Integrity](#business-integrity)
 - [Tools Used](#tools-used)
 - [﻿Data Cleaning/Preparation](﻿#data-cleaning/preparation)
-- [Data Analysis](#data-analysis)
+- [Explanatory Data Analysis](#explanatory-data-analysis)
 - [Result/Findings](#result/findings)
 - [Recommendations](#recommendations)
 - [Limitations](#limitations)
@@ -45,7 +45,7 @@
 3. Handling missing values.
 4. Data cleaning and formatting.
 
-### Data Analysis
+### Explanatory Data Analysis
 Include some interesting code/features worked with
 1. question 1
    ```sql

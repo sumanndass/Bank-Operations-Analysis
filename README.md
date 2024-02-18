@@ -46,7 +46,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 
 ### Database Creation and Data Loading
 - ERD Modelling
-  ![Bank_Operation_ERD_Model](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/c49a8d02-b800-406c-af82-b217bb269465)
+  - ![Bank_Operation_ERD_Model](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/8791c037-519e-4cc6-a0b6-a0ce1330b81c)
 - create a database named ‘bank’
    ```sql
    create database bank
@@ -55,7 +55,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
    ```sql
    use bank
    ```
-- **first create those tables which have only primary key and no foreign keys.**
+- **first create those tables which have only primary key and no foreign keys.** 👍
 - create a 'product_table'
    - col_name – data_type - remarks
    - prod_id – contains only 2 character – primary key
@@ -1326,11 +1326,113 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 In the initial data preparation phase, we performed Data loading and inspection, Handling missing values, Data cleaning and formatting.
 1. Find is there have any products other than FD, LA, SB, CA, RD in account_table. If found then replace the same with ‘SB’.
    ```sql
-	update account_table
-	set prod_id = 'SB'
-	where not prod_id in ('CA', 'FD', 'LA', 'RD', 'SB')
+   update account_table
+   set prod_id = 'SB'
+   where not prod_id in ('CA', 'FD', 'LA', 'RD', 'SB')
    ```
 2. Find is there have any customer region other than North, East, South, West in region_table. If found then replace the same with ‘North’.
+   ```sql
+   update region_table
+   set reg_name = 'North'
+   where not reg_name in ('East', 'North', 'South', 'West')
+   ```
+3. Find if any branches other than (BR1, BR3, BR4, BR6) in North region.
+   ```sql
+   select * from region_table r join branch_table b on r.reg_id = b.reg_id
+   where b.reg_id = 1 and br_id not in ('BR1', 'BR3', 'BR4', 'BR6')
+   ```
+4. Find if any branches other than (BR2, BR7, BR8) in East region.
+   ```sql
+   select * from region_table r join branch_table b on r.reg_id = b.reg_id
+   where b.reg_id = 2 and br_id not in ('BR2', 'BR7', 'BR8')
+   ```
+5. Find if any branches other than (BR5, BR9, BR11) in South region.
+   ```sql
+   select * from region_table r join branch_table b on r.reg_id = b.reg_id
+   where b.reg_id = 3 and br_id not in ('BR5', 'BR9', 'BR11')
+   ```
+6. Find if any branches other than (BR10, BR12, BR13) in West region.
+   ```sql
+   select * from region_table r join branch_table b on r.reg_id = b.reg_id
+   where b.reg_id = 4 and br_id not in ('BR10', 'BR12', 'BR13')
+   ```
+7. Find any account id is less than 1001. If found store the same in ‘wrong_account’ table.
+   ```sql
+   select * into wrong_account from account_table
+   where acc_id < 1001
+   ```
+8. Find any account status is other than (‘O’ for Operative, ‘I’ for Inoperative, ‘C’ for Closed). If found store the same in ‘wrong_account’ table.
+   ```sql
+   set identity_insert wrong_account on
+   insert into wrong_account (acc_id, cust_name, cust_add, cust_state, cust_zipcode, br_id, prod_id, doo, clr_bal, unclr_bal, status)
+   select acc_id, cust_name, cust_add, cust_state, cust_zipcode, br_id, prod_id, doo, clr_bal, unclr_bal, status from account_table
+   where status not in ('I', 'O', 'C')
+   ```
+9. Find the wrong transaction entered where transaction mode is ‘Cash Withdrawal’ or ‘Cash Deposit’ but there have Cheque no. or Cheque Date. If found then store the same in 'wrong_transaction' table.
+    ```sql
+    select * into wrong_transaction from transaction_table
+    where txn_type in ('CW', 'CD') and (chq_no is not null or chq_date is not null)
+    ```
+10. Find any Cheque number length is less than 6 digits.
+    ```sql
+    select * from transaction_table where len(chq_no) < 6
+    ```
+11. If found then write a query to display required 0 before cheque number and make them a 6 digits long cheque number.
+    ```sql
+    select *,
+    case
+    	when len(chq_no) = 5 then concat('0', chq_no)
+    	when len(chq_no) = 4 then concat('00', chq_no)
+    	when len(chq_no) = 3 then concat('000', chq_no)
+    	when len(chq_no) = 2 then concat('0000', chq_no)
+    	when len(chq_no) = 1 then concat('00000', chq_no)
+    	else chq_no
+    end as full_chq_no
+    from transaction_table
+    ```
+12. Find duplicate values in Account ID.
+    ```sql
+    with cte as (select acc_id, count(*) cnt from account_table group by acc_id)
+    select * from cte where cnt > 1
+    ```
+13. Find any transaction where transaction date is older than date of opening of account.
+    ```sql
+    select * from transaction_table t left join account_table a on t.acc_id = a.acc_id
+    where dot < doo
+    ```
+14. If found then add 3 years to the transaction date as instructed by bank.
+    ```sql
+    update transaction_table
+    set dot = dateadd(YY, 3, dot)
+    from transaction_table t left join account_table a on t.acc_id = a.acc_id
+    where dot < doo
+    ```
+15. Find cheque deposit discrepency like any cheque date is older than six month of transaction date.
+    ```sql
+    select *, datediff(DD, chq_date, dot) chq_dt_diff from transaction_table
+    where datediff(DD, chq_date, dot) > 180
+    ```
+16. Find a Cash Withdrawal happened more than 3 times in a single day.
+    ```sql
+    select acc_id, format(dot,'yyyy-MM-dd') dates, count(*) tran_nos from transaction_table
+    where txn_type = 'CW'
+    group by acc_id, format(dot,'yyyy-MM-dd')
+    having count(*) > 3
+    ```
+17. The transaction type 'Cheque Deposit' should not have 'NULL' in the 'Cheque Number' and 'Cheque Date' columns.
+    ```sql
+    update transaction_table
+    set chq_no = null, chq_date = null
+    where txn_type in ('CW','CD')
+    ```
+18. Find any transaction amount is in negative.
+    ```sql
+    select * from transaction_table where txn_amt < 0
+    ```
+19. Find any savings account has below the Rs. 1,000/ balance.
+    ```sql
+    select * from account_table where prod_id = 'SB' and clr_bal < 1000
+    ```
 
 ### Explanatory Data Analysis
 Include some interesting code/features worked with

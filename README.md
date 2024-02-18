@@ -1465,11 +1465,25 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```
   4. The transaction type and account wise sum of transaction amount for current month.
      ```sql
-     create view vw_txn_type_accid_txn_count
+     create view vw_txn_type_accid_total_txn
      as
-     select txn_type, acc_id, count(*) no_of_txns from transaction_table
+     select txn_type, acc_id, sum(txn_amt) total_txn_amt from transaction_table
+     where month(dot) = month(getdate()) and year(dot) = year(getdate())
      group by txn_type, acc_id
      ```
+- SQL Query requirements
+  1. Provide a list of transactions that took place in a Branch during the previous month.
+     ```sql
+     select * from transaction_table
+     where year(dot) = year(getdate()) and month(dot) = month(getdate()) - 1
+     ```
+  2. Provide the total cash deposits made by each branch during the past 5 days.
+     ```sql
+     select br_id, SUM(txn_amt) total_amt from transaction_table
+     where datediff(DD, dot, GETDATE()) <= 5 and txn_type = 'CD'
+     group by br_id
+     ```
+  3. 
 
 
 

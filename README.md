@@ -1483,7 +1483,57 @@ In the initial data preparation phase, we performed Data loading and inspection,
      where datediff(DD, dot, GETDATE()) <= 5 and txn_type = 'CD'
      group by br_id
      ```
-  3. 
+  3. Please provide the total cash withdrawals by branch during the previous month, where the total withdrawals exceeded Rs 10 lakh.
+     ```sql
+     select br_id, sum(txn_amt) from transaction_table
+     where txn_type = 'CW' and datediff(MM, dot, getdate()) = 1
+     group by br_id
+     having sum(txn_amt) > 1000000
+     ```
+  4. List the names of the account holders and their branch names, along with their maximum and minimum transaction amounts if there have any difference in maximum and minimum amount.
+     ```sql
+     select a.cust_name, b.br_name, k.max_amt, k.min_amt
+     from account_table a join
+     (select acc_id, br_id, max(txn_amt) max_amt, min(txn_amt) min_amt from transaction_table
+     group by acc_id, br_id) as k on a.acc_id = k.acc_id
+     join branch_table b on k.br_id = b.br_id
+     where k.max_amt <> k.min_amt
+     order by k.acc_id, b.br_name
+     ```
+  5. List the account holders' names and branch names for the second-highest maximum transaction amount.
+     ```sql
+     select a.acc_id, a.cust_name, b.br_name, k.txn_amt sec_max_amt
+     from account_table a join
+     (select acc_id, br_id, txn_amt, RANK() over(partition by acc_id , br_id order by txn_amt desc) max_rn from transaction_table) as k
+     on a.acc_id = k.acc_id
+     join branch_table b on k.br_id = b.br_id
+     where max_rn = 2
+     ```
+  6. Provide the total transaction amount for the last day of previous month according to the type of transaction and branch.
+     ```sql
+     select * from transaction_table
+     where dot = eomonth(dateadd(mm, -1, getdate()))
+     ```
+  7. Give the names of the account holders who have not made a single cash deposit transaction in the last 15 days.
+     ```sql
+     select distinct cust_name from transaction_table t
+     left join account_table a on a.acc_id = t.acc_id
+     where txn_type = 'CD' and DATEDIFF(dd, dot, getdate()) > 15
+     ```
+  8. Identify the product that has the most accounts.
+     ```sql
+     select p.prod_name from product_table p
+     join (select prod_id, COUNT(*) cnt from account_table
+     group by prod_id
+     order by COUNT(*) desc
+     offset 0 rows fetch first 1 rows only) as k
+     on p.prod_id = k.prod_id
+     ```
+  9. 
+
+
+
+
 
 
 

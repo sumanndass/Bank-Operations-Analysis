@@ -46,8 +46,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 
 ### Database Creation and Data Loading
 - ERD Modelling
-  
-
+  ![Bank_Operation_ERD_Model](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/c49a8d02-b800-406c-af82-b217bb269465)
 - create a database named ‘bank’
    ```sql
    create database bank

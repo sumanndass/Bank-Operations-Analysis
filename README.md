@@ -1435,12 +1435,44 @@ In the initial data preparation phase, we performed Data loading and inspection,
     ```
 
 ### Explanatory Data Analysis
-Include some interesting code/features worked with
-1. question 1
-   ```sql
-   select * from table1
-   ```
-3. question 2
+- SQL View requirements as required by Bank
+  1. The account information includes the Account Number, Name, and Address from the Account table.
+     ```sql
+     create view vw_acc_info
+     as
+     select acc_id, cust_name, cust_add, cust_state, cust_zipcode from account_table
+     ```
+  2. The account information includes the account number, name, date of last transaction, and total number of transactions in the account.
+     ```sql
+     create view vw_acc_last_and_total_txn
+     as
+     with cte1 as (select acc_id, cust_name from account_table),
+     cte2 as (select acc_id, format(dot, 'dd-MM-yyyy') last_txn_date from
+     (select acc_id, dot, rank() over(partition by acc_id order by dot desc) rn from transaction_table) as k
+     where rn = 1),
+     cte3 as (select acc_id, COUNT(*) no_of_txn from transaction_table
+     group by acc_id)
+     select cte1.acc_id, cte1.cust_name, cte2.last_txn_date, cte3.no_of_txn from cte1
+     join cte2 on cte1.acc_id = cte2.acc_id
+     join cte3 on cte2.acc_id = cte3.acc_id
+     ```
+  3. The sum of the uncleared balance can be calculated both branch-wise and product-wise.
+     ```sql
+     create view vw_br_prod_wise_unclr_bal
+     as
+     select br_id, prod_id, sum(unclr_bal) total_unclr_bal from account_table
+     group by br_id, prod_id
+     ```
+  4. The transaction type and account wise sum of transaction amount for current month.
+     ```sql
+     create view vw_txn_type_accid_txn_count
+     as
+     select txn_type, acc_id, count(*) no_of_txns from transaction_table
+     group by txn_type, acc_id
+     ```
+
+
+
 
 ### Result or Findings
 1. The analysis results are summarized as follows:

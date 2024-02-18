@@ -55,7 +55,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
    ```sql
    use bank
    ```
-- first create those tables which have only primary key and no foreign keys.
+- **first create those tables which have only primary key and no foreign keys.**
 - create a 'product_table'
    - col_name – data_type - remarks
    - prod_id – contains only 2 character – primary key
@@ -1323,10 +1323,14 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
     ```
 
 ### ﻿Data Cleaning or Preparation
-In the initial data preparation phase, we performed the following tasks:
-1. Data loading and inspection.
-2. Handling missing values.
-3. Data cleaning and formatting.
+In the initial data preparation phase, we performed Data loading and inspection, Handling missing values, Data cleaning and formatting.
+1. Find is there have any products other than FD, LA, SB, CA, RD in account_table. If found then replace the same with ‘SB’.
+   ```sql
+	update account_table
+	set prod_id = 'SB'
+	where not prod_id in ('CA', 'FD', 'LA', 'RD', 'SB')
+   ```
+2. Find is there have any customer region other than North, East, South, West in region_table. If found then replace the same with ‘North’.
 
 ### Explanatory Data Analysis
 Include some interesting code/features worked with

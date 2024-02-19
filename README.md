@@ -1585,7 +1585,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
       	group by br_id
       	having count(0) > 10) as k on b.br_id = k.br_id
       ```
-  16. 
+  16. Create a list of accounts that will be considered 'inactive' next month. Remember, these customers failed to make any transactions within the last 365 days.
+      ```sql
+      select * from
+      (select acc_id, max(dot) mx_dt from transaction_table
+      group by acc_id) as k
+      where datediff(dd, mx_dt, getdate()) >= 365
+      ```
+  17. 
 
 
       

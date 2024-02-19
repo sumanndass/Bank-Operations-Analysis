@@ -1536,7 +1536,16 @@ In the initial data preparation phase, we performed Data loading and inspection,
       where datediff(DD, dot, getdate()) <= 180) as k
       group by txn_type, mnth
       ```
-  10. 
+  10. Identify the products that are experiencing a rise in the average number of transactions per month in year 2023.
+      ```sql
+      select txn_type, year(dot) year, month(dot) mnth, count(*) cnt_txn,
+      ((count(*) - lag(count(*)) over(partition by txn_type, year(dot) order by year(dot), month(dot))) * 1.0 / count(*))
+      from transaction_table
+      where year(dot) = 2023
+      group by txn_type, year(dot), month(dot)
+      order by 1, 2, 3
+      ```
+  11. 
 
 
 

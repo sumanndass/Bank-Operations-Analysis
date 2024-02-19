@@ -1569,7 +1569,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id
       having count(txn_type) > 1) as k on a.acc_id = k.acc_id
       ```
-  14. 
+  14. Specify how many transactions the manager has authorized 1st week of current month. Remember, above 500000 withdrawal needs manager authorization.
+      ```sql
+      select count(*) high_val_txn_cnt from transaction_table
+      where txn_type = 'CW' and month(dot) = month(getdate()) and year(dot) = year(getdate())
+      and (datepart(day,dot)-1)/7 + 1 = 1
+      and txn_amt >= 500000
+      ```
+  15. 
 
 
       

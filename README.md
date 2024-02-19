@@ -1561,15 +1561,18 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id, day(dot)
       having count(*) > 1) k on a.acc_id = k.acc_id
       ```
-  13. 
+  13. For customers who have made at least one transaction within past 10 days in at least two each transaction type, provide them with their account holder name, account number, and amount.
+      ```sql
+      select a.cust_name, a.acc_id, k.total_amt from account_table a join
+      (select acc_id, sum(txn_amt) total_amt, count(txn_type) cnt from transaction_table
+      where DATEDIFF(dd, dot, getdate()) <= 10
+      group by acc_id
+      having count(txn_type) > 1) as k on a.acc_id = k.acc_id
+      ```
+  14. 
 
 
-
-
-
-
-
-
+      
 ### Result or Findings
 1. The analysis results are summarized as follows:
 2. The company's sales have been steadily increasing over the past year, with a noticeable peak during the holiday season.

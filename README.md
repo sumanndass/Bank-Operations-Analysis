@@ -1651,21 +1651,21 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by txn_type
       ```
   23. Provide the following information from the account table:
-      Number of accounts for each product and month
-      	```sql
-       	select prod_id, year(doo) year, month(doo) month, count(*) no_of_acc from account_table
-       	group by prod_id, year(doo), month(doo)
-       	order by 1, 2, 3
-       	```
-      The total number of accounts for every product
-      	```sql
-       	select prod_id, count(*) total_acc from account_table
-       	group by prod_id
-       	```
-      Bank's total number of accounts.
-      	```sql
-       	select count(*) total_no_acc from account_table
-       	```      
+      1. Number of accounts for each product and month
+         ```sql
+         select prod_id, year(doo) year, month(doo) month, count(*) no_of_acc from account_table
+         group by prod_id, year(doo), month(doo)
+         order by 1, 2, 3
+         ```
+      2. The total number of accounts for every product
+         ```sql
+         select prod_id, count(*) total_acc from account_table
+         group by prod_id
+         ```
+      3. Bank's total number of accounts.
+         ```sql
+         select count(*) total_no_acc from account_table
+         ```      
 
 
       

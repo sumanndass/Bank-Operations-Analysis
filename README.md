@@ -1576,7 +1576,16 @@ In the initial data preparation phase, we performed Data loading and inspection,
       and (datepart(day,dot)-1)/7 + 1 = 1
       and txn_amt >= 500000
       ```
-  15. 
+  15. Provide a breakdown of transactions by region and branch for regions with over 10 transactions that occurred in the last month.
+      ```sql
+      select r.reg_name, b.br_name, cnt as no_of_txn from branch_table b
+      join region_table r on b.reg_id = r.reg_id
+      join (select br_id, count(0) cnt from transaction_table
+      	where datediff(mm, dot, getdate()) = 1
+      	group by br_id
+      	having count(0) > 10) as k on b.br_id = k.br_id
+      ```
+  16. 
 
 
       

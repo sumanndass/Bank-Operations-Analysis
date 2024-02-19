@@ -1665,9 +1665,11 @@ In the initial data preparation phase, we performed Data loading and inspection,
       3. Bank's total number of accounts.
          ```sql
          select count(*) total_no_acc from account_table
-         ```      
+         ```
+- SQL Stored Procedure requirements
+  ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
 
-
+	
       
 ### Result or Findings
 1. The analysis results are summarized as follows:

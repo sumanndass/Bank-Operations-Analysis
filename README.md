@@ -1545,7 +1545,23 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by txn_type, year(dot), month(dot)
       order by 1, 2, 3
       ```
-  11. 
+  11. Provide the names of the account holders and the number of transactions they carried out on every day of last month.
+      ```sql
+      select cust_name, cnt as last_mnth_cnt from account_table a join
+      (select acc_id, count(*) cnt from transaction_table
+      where datediff(mm, dot, getdate()) = 1
+      group by acc_id) as k on a.acc_id = k.acc_id
+      order by a.acc_id
+      ```
+  12. For customers who have made multiple cash withdrawal transactions on the same day, provide the account holder's name, account number, and sum amount. (For this query, consider the transactions made in the last 20 days)
+      ```sql
+      select a.acc_id, a.cust_name, k.sum_txn from account_table a join
+      (select acc_id, day(dot) day, count(*) cnt_no_of_txn, sum(txn_amt) sum_txn from transaction_table
+      where txn_type = 'CW' and datediff(dd, dot, getdate()) <= 20
+      group by acc_id, day(dot)
+      having count(*) > 1) k on a.acc_id = k.acc_id
+      ```
+  13. 
 
 
 

@@ -1601,7 +1601,15 @@ In the initial data preparation phase, we performed Data loading and inspection,
       order by cnt desc
       offset 0 rows fetch first 1 rows only
       ```
-  18. 
+  18. Identify the day with the highest amount of transactions or cash deposits made at a specific branch in the past month.
+      ```sql
+      select format(dot, 'dd-MM-yyyy') day, sum(txn_amt) total_amt from transaction_table
+      where datediff(mm, dot, getdate()) = 1
+      group by format(dot, 'dd-MM-yyyy')
+      order by 2 desc
+      offset 0 rows fetch first 1 rows only
+      ```
+  19. 
 
 
       

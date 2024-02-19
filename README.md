@@ -1609,7 +1609,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
       order by 2 desc
       offset 0 rows fetch first 1 rows only
       ```
-  19. 
+  19. Provide a list of clients whose cheque books have not been used by them in the past 15 days.
+      ```sql
+      select * from account_table
+      where acc_id in
+      (select acc_id from transaction_table
+      where txn_type in ('CD', 'CW') and datediff(dd, dot, getdate()) <= 15)
+      ```
+  20. 
 
 
       

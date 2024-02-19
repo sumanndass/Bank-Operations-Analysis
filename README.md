@@ -1529,7 +1529,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
      offset 0 rows fetch first 1 rows only) as k
      on p.prod_id = k.prod_id
      ```
-  9. 
+  9. List the product with the highest monthly average number of transactions (based on data from the past 6 months).
+      ```sql
+      select txn_type, mnth, count(*) txn_cnt from
+      (select txn_type, dot, format(dot, 'MM-yyyy') mnth, count(*) over(partition by txn_type, datepart(mm, dot)) cnt from transaction_table
+      where datediff(DD, dot, getdate()) <= 180) as k
+      group by txn_type, mnth
+      ```
+  10. 
 
 
 

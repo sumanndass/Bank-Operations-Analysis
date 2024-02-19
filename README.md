@@ -1592,7 +1592,16 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id) as k
       where datediff(dd, mx_dt, getdate()) >= 365
       ```
-  17. 
+  17. Identify the customer’s name and account id who entered the most transactions on the last year.
+      ```sql
+      select a.acc_id, a.cust_name, cnt from account_table a join
+      (select acc_id, count(*) cnt from transaction_table
+      where year(dot) = (year(getdate()) - 1)
+      group by acc_id) k on a.acc_id = k.acc_id
+      order by cnt desc
+      offset 0 rows fetch first 1 rows only
+      ```
+  18. 
 
 
       

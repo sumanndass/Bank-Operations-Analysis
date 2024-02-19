@@ -1616,7 +1616,56 @@ In the initial data preparation phase, we performed Data loading and inspection,
       (select acc_id from transaction_table
       where txn_type in ('CD', 'CW') and datediff(dd, dot, getdate()) <= 15)
       ```
-  20. 
+  20. Indicate the transactions that have taken place in branches that are not the same as the ones that opened the account, but within the same region.
+      ```sql
+      with cte1 as
+      (select t.tran_id, t.acc_id, t.br_id, r.reg_name from transaction_table t
+      join branch_table b on t.br_id = b.br_id
+      join region_table r on b.reg_id = r.reg_id),
+      cte2 as
+      (select a.acc_id, a.br_id, r.reg_name from account_table a
+      join branch_table b on a.br_id = b.br_id
+      join region_table r on b.reg_id = r.reg_id)
+      select cte1.tran_id from cte1 join cte2 on cte1.acc_id = cte2.acc_id
+      where cte1.br_id <> cte2.br_id and cte1.reg_name = cte2.reg_name
+      order by cte1.acc_id
+      ```
+  21. Indicate the transactions that have occurred in branches that are not the same as the branch that opened the account and the two branches, and the two branches are situated in distinct regions
+      ```sql
+      with cte1 as
+      (select t.tran_id, t.acc_id, t.br_id, r.reg_name from transaction_table t
+      join branch_table b on t.br_id = b.br_id
+      join region_table r on b.reg_id = r.reg_id),
+      cte2 as
+      (select a.acc_id, a.br_id, r.reg_name from account_table a
+      join branch_table b on a.br_id = b.br_id
+      join region_table r on b.reg_id = r.reg_id)
+      select cte1.tran_id from cte1 join cte2 on cte1.acc_id = cte2.acc_id
+      where cte1.br_id <> cte2.br_id and cte1.reg_name <> cte2.reg_name
+      order by cte1.acc_id
+      ```
+  22. Indicate the average amount of each transaction type for the BR7 branch and date 27th Dec 2023.
+      ```sql
+      select txn_type, sum(txn_amt) from transaction_table
+      where br_id = 'BR7' and format(dot, 'yyyy-MM-dd') = '2023-12-13'
+      group by txn_type
+      ```
+  23. Provide the following information from the account table:
+      Number of accounts for each product and month
+      	```sql
+       	select prod_id, year(doo) year, month(doo) month, count(*) no_of_acc from account_table
+       	group by prod_id, year(doo), month(doo)
+       	order by 1, 2, 3
+       	```
+      The total number of accounts for every product
+      	```sql
+       	select prod_id, count(*) total_acc from account_table
+       	group by prod_id
+       	```
+      Bank's total number of accounts.
+      	```sql
+       	select count(*) total_no_acc from account_table
+       	```      
 
 
       

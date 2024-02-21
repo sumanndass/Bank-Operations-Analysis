@@ -1442,6 +1442,10 @@ In the initial data preparation phase, we performed Data loading and inspection,
      as
      select acc_id, cust_name, cust_add, cust_state, cust_zipcode from account_table
      ```
+     Calling View
+     ```sql
+     select * from vw_acc_info
+     ```     
   2. The account information includes the account number, name, date of last transaction, and total number of transactions in the account.
      ```sql
      create view vw_acc_last_and_total_txn
@@ -1456,12 +1460,20 @@ In the initial data preparation phase, we performed Data loading and inspection,
      join cte2 on cte1.acc_id = cte2.acc_id
      join cte3 on cte2.acc_id = cte3.acc_id
      ```
+     Calling View
+     ```sql
+     select * from vw_acc_last_and_total_txn
+     ```
   3. The sum of the uncleared balance can be calculated both branch-wise and product-wise.
      ```sql
      create view vw_br_prod_wise_unclr_bal
      as
      select br_id, prod_id, sum(unclr_bal) total_unclr_bal from account_table
      group by br_id, prod_id
+     ```
+     Calling View
+     ```sql
+     select * from vw_br_prod_wise_unclr_bal
      ```
   4. The transaction type and account wise sum of transaction amount for current month.
      ```sql
@@ -1471,6 +1483,36 @@ In the initial data preparation phase, we performed Data loading and inspection,
      where month(dot) = month(getdate()) and year(dot) = year(getdate())
      group by txn_type, acc_id
      ```
+     Calling View
+     ```sql
+     select * from vw_txn_type_accid_total_txn
+     ```
+  5. Find number of transactions made by customers in last 6 months.
+     ```sql
+     create view vw_no_of_txn_last_6_mnth
+     as
+     (select a.acc_id, a.cust_name, k.no_of_txn from account_table a join
+     (select acc_id, count(*) no_of_txn from transaction_table
+     where datediff(mm, dot, getdate()) = 6
+     group by acc_id) k on a.acc_id = k.acc_id)
+     ```
+     Calling View
+     ```sql
+     select * from vw_no_of_txn_last_6_mnth
+     ```
+  6. Find branch wise number of customers.
+     ```sql
+     create view vw_no_of_cust_br_wise
+     as
+     (select b.br_id, b.br_name, k.no_of_cust from branch_table b join
+     (select br_id, count(*) no_of_cust from account_table
+     group by br_id) k on b.br_id= k.br_id)
+     ```
+     Calling View
+     ```sql
+     select * from vw_no_of_cust_br_wise
+     ```
+
 - SQL Query requirements
   1. Provide a list of transactions that took place in a Branch during the previous month.
      ```sql
@@ -1666,6 +1708,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
          ```sql
          select count(*) total_no_acc from account_table
          ```
+
 - SQL Stored Procedure requirements
   ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
 

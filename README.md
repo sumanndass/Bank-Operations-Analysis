@@ -1725,7 +1725,48 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_acc_info
      ```
-	
+  2. Create a stored process to get all the account details of the account id and the transaction for the desired month and year, as well as number of transactions the customer has made in different transaction types. If the account id or year or month is incorrect, print the statement ‘Please enter correct account id’, ‘Please enter correct year’ and ‘Please enter correct month’ respectively.
+     ```sql
+     create proc sp_accdetail_txndetail_nooftxntype
+     (
+     	@acc_id int,
+     	@year int,
+     	@month varchar(3)
+     )
+     as
+     begin
+     	if not exists(select * from transaction_table where acc_id = @acc_id)
+     		begin
+     			print 'please enter the correct account id'
+     		end
+     	else
+     		if not exists(select * from transaction_table where acc_id = @acc_id and year(dot) = @year)
+     			begin
+     				print 'please enter the correct year'
+     			end
+     		else
+     			if exists(select * from transaction_table where acc_id = @acc_id and year(dot) = @year and format(dot, 'MMM') = @month)
+     				begin
+     					select * from account_table where acc_id = @acc_id
+
+     					select * from transaction_table
+     					where acc_id = @acc_id and year(dot) = @year and format(dot, 'MMM') = @month
+
+     					select txn_type, count(*) no_of_txn from transaction_table
+     					where acc_id = @acc_id and year(dot) = @year and format(dot, 'MMM') = @month
+     					group by txn_type
+     				end
+     			else
+     				print 'please enter the correct month'
+     end
+     ```
+     Calling SP
+     ```sql
+     exec sp_accdetail_txndetail_nooftxntype 1010, 2023, 'dec'
+     ```
+     
+     
+     	
 
   ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
 

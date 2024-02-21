@@ -1709,7 +1709,24 @@ In the initial data preparation phase, we performed Data loading and inspection,
          select count(*) total_no_acc from account_table
          ```
 
-- SQL Stored Procedure requirements
+- SQL T-SQL / Stored Procedure requirements
+  1. Create a stored procedure to get the customer’s name, cleared and uncleared balance for a given account id.
+     ```s
+     create proc sp_getaccinfo
+     (
+     	@acc_id int
+     )
+     as
+     begin
+     	select clr_bal, unclr_bal from account_table where acc_id = @acc_id
+     end
+     ```
+     Calling SP
+     ```sql
+     select * from vw_acc_info
+     ```
+	
+
   ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
 
 	

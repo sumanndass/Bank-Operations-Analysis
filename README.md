@@ -1433,6 +1433,13 @@ In the initial data preparation phase, we performed Data loading and inspection,
     ```sql
     select * from account_table where prod_id = 'SB' and clr_bal < 1000
     ```
+20. Update all initial deposits for all account IDs where cash deposits were mistakenly entered as withdrawals.
+    ```sql
+    with cte as(select *, rank() over(partition by acc_id order by dot) rn from transaction_table)
+    update cte
+    set txn_type = 'CD'
+    where rn = 1 and txn_type = 'CW'
+    ```
 
 ### Explanatory Data Analysis
 - SQL View requirements as required by Bank
@@ -1764,12 +1771,100 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      exec sp_accdetail_txndetail_nooftxntype 1010, 2023, 'dec'
      ```
-     
-     
+  3. Create a stored procedure to print the below mentioned bank statement
+     ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
+     ```sql
+     alter proc [dbo].[sp_get_bank_statement]
+     (
+     	@acc_id int,
+     	@fromdate datetime,
+     	@todate datetime = null -- optional input parameter
+     )
+     as
+     begin
+     	if @todate is null
+     	set @todate = getdate() -- set value for optional input parameter
+
+     	declare	@cust_name varchar(30)
+     	declare	@br_id varchar(4)
+      declare	@br_name varchar(20)
+     	declare	@prod_id char(2)
+     	declare	@clr_bal money
+     	declare	@unclr_bal money
+     	print('------------------------------------------------------------------------------------')
+     	print('                                     The Bank                                       ')
+     	print('List of transactions from '+cast(@fromdate as varchar)+' to '+cast(@todate as varchar))
+     	-- fetch cutomer information
+     	select
+     	@cust_name = a.cust_name,
+     	@br_id = a.br_id,
+     	@br_name = b.br_name,
+     	@prod_id = a.prod_id,
+     	@clr_bal = a.clr_bal,
+     	@unclr_bal = a.unclr_bal
+     	from account_table a join branch_table b on a.br_id = b.br_id
+     	where acc_id = @acc_id
+     	-- print first few headers
+     	print('------------------------------------------------------------------------------------')
+     	print('     Account No: ') + cast(@acc_id as varchar)
+     	print('A/C Holder Name: ') + @cust_name
+     	print('    Branch Name: ') + @br_name
+     	print('     Product ID: ') + @prod_id
+     	print('  Clear Balance: INR ') + cast(@clr_bal as varchar)
+     	print('------------------------------------------------------------------------------------')
+     	print('Sl No	Date					Txn Type	Cheque No		Amount			Running Balance')
+     	print('------------------------------------------------------------------------------------')
+     	-- fetch transaction info and put into a temp table for looping the same
+     	select row_number() over(order by dot asc) rn, dot, txn_type, chq_no, txn_amt,
+     			sum(case
+     					when txn_type in ('CW') then (txn_amt * -1)
+     					else txn_amt
+     					end) over(order by dot) running_bal into #temp
+     	from transaction_table where acc_id = @acc_id and dot between @fromdate and @todate
+     	-- initialize loop
+     	declare @x int = 1
+
+     	declare @sl_no int
+     	declare @dot datetime
+     	declare @txn_type varchar(3)
+     	declare @chq_no varchar(6)
+     	declare @txn_amt money
+     	declare @running_balance money
+     	--looping starts
+     	while @x <= (select count(*) from #temp)
+     	begin
+     		select @sl_no = rn, @dot = dot, @txn_type = txn_type,
+     		@chq_no = chq_no, @txn_amt = txn_amt, @running_balance = running_bal
+     		from #temp where rn = @x
+     		-- print data
+     		print(cast(@sl_no as varchar)+space(7)+cast(@dot as varchar)+space(5)+@txn_type+space(10)
+     		+isnull(@chq_no, 'na')+space(14)+cast(@txn_amt as varchar)+space(8)+cast(@running_balance as varchar))
+     		-- increment for looping
+     		set @x = @x + 1
+     	end
+     	-- print rest data
+     	print('')
+     	declare @total_txn int = (select count(*) from #temp)
+     	print('     Total Number of Transaction: ')+cast(@total_txn as varchar)
+     	declare @cd int = (select count(*) from #temp where txn_type = 'CD')
+     	print('      Total Number Cash Deposits: ')+cast(@cd as varchar)
+     	declare @cqd int = (select count(*) from #temp where txn_type = 'CQD')
+     	print(' Total Number of Cheque Deposits: ')+cast(@cqd as varchar)
+     	declare @cw int = (select count(*) from #temp where txn_type = 'CW')
+     	print('Total Number of Cash Withdrawals: ')+cast(@cw as varchar)
+     	declare @below_1000 int = (select count(*) from #temp where running_bal < 1000)
+     	print('Dates when the product''s minimum balance was not met: ')+cast(@below_1000 as varchar)
+     	declare @rb money = (select running_bal from #temp where rn = (select max(rn) from #temp))
+     	print('                 Closing Balance: ')+cast(@rb as varchar)
+     	print('------------------------------------------------------------------------------------')
+     	print('                          Thank You for Connecting Us'                               )
+     end
+     ```
+     Calling SP
+     ```sql
+     exec sp_accdetail_txndetail_nooftxntype 1010, 2023, 'dec'
+     ```
      	
-
-  ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
-
 	
       
 ### Result or Findings

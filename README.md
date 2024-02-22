@@ -1542,12 +1542,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
      select * from transaction_table
      where year(dot) = year(getdate()) and month(dot) = month(getdate()) - 1
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/7be605aa-51c8-45e1-8ae5-3a396a58bf7c)
   2. Provide the total cash deposits made by each branch during the past 5 days.
      ```sql
      select br_id, SUM(txn_amt) total_amt from transaction_table
      where datediff(DD, dot, GETDATE()) <= 5 and txn_type = 'CD'
      group by br_id
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/73452af8-9c05-4b8c-9a4b-96b6688b003e)
   3. Please provide the total cash withdrawals by branch during the previous month, where the total withdrawals exceeded Rs 10 lakh.
      ```sql
      select br_id, sum(txn_amt) from transaction_table
@@ -1555,6 +1557,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      group by br_id
      having sum(txn_amt) > 1000000
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/b1747e3e-86af-44f6-87df-6b5c0014ce05)
   4. List the names of the account holders and their branch names, along with their maximum and minimum transaction amounts if there have any difference in maximum and minimum amount.
      ```sql
      select a.cust_name, b.br_name, k.max_amt, k.min_amt
@@ -1565,6 +1568,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      where k.max_amt <> k.min_amt
      order by k.acc_id, b.br_name
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/456547b4-3455-492a-9f06-6cf6f48e3059)
   5. List the account holders' names and branch names for the second-highest maximum transaction amount.
      ```sql
      select a.acc_id, a.cust_name, b.br_name, k.txn_amt sec_max_amt
@@ -1574,17 +1578,20 @@ In the initial data preparation phase, we performed Data loading and inspection,
      join branch_table b on k.br_id = b.br_id
      where max_rn = 2
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/803fbcfa-f738-4c16-bf67-6e31adf2e56a)
   6. Provide the total transaction amount for the last day of previous month according to the type of transaction and branch.
      ```sql
      select * from transaction_table
      where dot = eomonth(dateadd(mm, -1, getdate()))
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/189dc895-e832-4022-9084-abe79d958851)
   7. Give the names of the account holders who have not made a single cash deposit transaction in the last 15 days.
      ```sql
      select distinct cust_name from transaction_table t
      left join account_table a on a.acc_id = t.acc_id
      where txn_type = 'CD' and DATEDIFF(dd, dot, getdate()) > 15
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/562d75be-29e9-4dde-a57a-d9d6346b7005)
   8. Identify the product that has the most accounts.
      ```sql
      select p.prod_name from product_table p
@@ -1594,6 +1601,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      offset 0 rows fetch first 1 rows only) as k
      on p.prod_id = k.prod_id
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/106e1ae2-ebe8-4e14-88bd-553a79112355)
   9. List the product with the highest monthly average number of transactions (based on data from the past 6 months).
       ```sql
       select txn_type, mnth, count(*) txn_cnt from
@@ -1601,6 +1609,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       where datediff(DD, dot, getdate()) <= 180) as k
       group by txn_type, mnth
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/a4ac86c4-cdc5-4290-a2d2-244c3e930b9b)
   10. Identify the products that are experiencing a rise in the average number of transactions per month in year 2023.
       ```sql
       select txn_type, year(dot) year, month(dot) mnth, count(*) cnt_txn,
@@ -1610,6 +1619,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by txn_type, year(dot), month(dot)
       order by 1, 2, 3
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5fc45b7f-ab6f-4ab7-922e-e4ea7df79600)
   11. Provide the names of the account holders and the number of transactions they carried out on every day of last month.
       ```sql
       select cust_name, cnt as last_mnth_cnt from account_table a join
@@ -1618,6 +1628,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id) as k on a.acc_id = k.acc_id
       order by a.acc_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/642c4c71-a000-4aab-85b4-3c31e868ba06)
   12. For customers who have made multiple cash withdrawal transactions on the same day, provide the account holder's name, account number, and sum amount. (For this query, consider the transactions made in the last 20 days)
       ```sql
       select a.acc_id, a.cust_name, k.sum_txn from account_table a join
@@ -1626,6 +1637,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id, day(dot)
       having count(*) > 1) k on a.acc_id = k.acc_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/d8c77327-8a4f-4b06-98aa-d06b5b1c7832)
   13. For customers who have made at least one transaction within past 10 days in at least two each transaction type, provide them with their account holder name, account number, and amount.
       ```sql
       select a.cust_name, a.acc_id, k.total_amt from account_table a join
@@ -1634,6 +1646,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id
       having count(txn_type) > 1) as k on a.acc_id = k.acc_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/59422e11-3b7c-4abe-a928-181eb2d3f1b6)
   14. Specify how many transactions the manager has authorized 1st week of current month. Remember, above 500000 withdrawal needs manager authorization.
       ```sql
       select count(*) high_val_txn_cnt from transaction_table
@@ -1641,6 +1654,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       and (datepart(day,dot)-1)/7 + 1 = 1
       and txn_amt >= 500000
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/ef60cb4b-6fe1-4393-8447-53334f54be1f)
   15. Provide a breakdown of transactions by region and branch for regions with over 10 transactions that occurred in the last month.
       ```sql
       select r.reg_name, b.br_name, cnt as no_of_txn from branch_table b
@@ -1650,6 +1664,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       	group by br_id
       	having count(0) > 10) as k on b.br_id = k.br_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/64a350c4-5e2e-45ac-bb1f-5b7f2f291137)
   16. Create a list of accounts that will be considered 'inactive' next month. Remember, these customers failed to make any transactions within the last 365 days.
       ```sql
       select * from
@@ -1657,6 +1672,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       group by acc_id) as k
       where datediff(dd, mx_dt, getdate()) >= 365
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/fe3a2842-b73b-4413-a11d-213fd5fa100c)
   17. Identify the customer’s name and account id who entered the most transactions on the last year.
       ```sql
       select a.acc_id, a.cust_name, cnt from account_table a join
@@ -1666,6 +1682,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       order by cnt desc
       offset 0 rows fetch first 1 rows only
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/9fd21307-e92c-4c48-ab99-712f1dfe477c)
   18. Identify the day with the highest amount of transactions or cash deposits made at a specific branch in the past month.
       ```sql
       select format(dot, 'dd-MM-yyyy') day, sum(txn_amt) total_amt from transaction_table
@@ -1674,6 +1691,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       order by 2 desc
       offset 0 rows fetch first 1 rows only
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/e2e1269b-a687-4a45-afdb-5bb1b031a453)
   19. Provide a list of clients whose cheque books have not been used by them in the past 15 days.
       ```sql
       select * from account_table
@@ -1681,6 +1699,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       (select acc_id from transaction_table
       where txn_type in ('CD', 'CW') and datediff(dd, dot, getdate()) <= 15)
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/ca7b8df0-e950-4b40-90d5-5395cc5a746d)
   20. Indicate the transactions that have taken place in branches that are not the same as the ones that opened the account, but within the same region.
       ```sql
       with cte1 as
@@ -1695,6 +1714,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
       where cte1.br_id <> cte2.br_id and cte1.reg_name = cte2.reg_name
       order by cte1.acc_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/9e7661c3-29e5-45e0-ab0b-804d00b20e26)
   21. Indicate the transactions that have occurred in branches that are not the same as the branch that opened the account and the two branches, and the two branches are situated in distinct regions
       ```sql
       with cte1 as
@@ -1709,12 +1729,14 @@ In the initial data preparation phase, we performed Data loading and inspection,
       where cte1.br_id <> cte2.br_id and cte1.reg_name <> cte2.reg_name
       order by cte1.acc_id
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/4d369d3d-a14f-49b5-a643-63e751bd67fa)
   22. Indicate the average amount of each transaction type for the BR7 branch and date 27th Dec 2023.
       ```sql
       select txn_type, sum(txn_amt) from transaction_table
       where br_id = 'BR7' and format(dot, 'yyyy-MM-dd') = '2023-12-13'
       group by txn_type
       ```
+      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/f999f639-9379-47a9-879f-56b80317aeb4)
   23. Provide the following information from the account table:
       1. Number of accounts for each product and month
          ```sql
@@ -1722,15 +1744,18 @@ In the initial data preparation phase, we performed Data loading and inspection,
          group by prod_id, year(doo), month(doo)
          order by 1, 2, 3
          ```
+         ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/2f5a3266-d551-4a26-9a4c-c16903c3093c)
       2. The total number of accounts for every product
          ```sql
          select prod_id, count(*) total_acc from account_table
          group by prod_id
          ```
+         ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/03783be0-38db-4db1-bc9b-0ec37c571e9a)
       3. Bank's total number of accounts.
          ```sql
          select count(*) total_no_acc from account_table
          ```
+         ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/9bdc50e2-97ee-404d-b141-43f8b536b392)
 
 - SQL T-SQL / Stored Procedure requirements
   1. Create a stored procedure to get the customer’s name, cleared and uncleared balance for a given account id.
@@ -1748,6 +1773,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_acc_info
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/0debdfc8-87ae-441f-97c2-c6550ec31107)
   2. Create a stored process to get all the account details of the account id and the transaction for the desired month and year, as well as number of transactions the customer has made in different transaction types. If the account id or year or month is incorrect, print the statement ‘Please enter correct account id’, ‘Please enter correct year’ and ‘Please enter correct month’ respectively.
      ```sql
      create proc sp_accdetail_txndetail_nooftxntype
@@ -1787,6 +1813,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      exec sp_accdetail_txndetail_nooftxntype 1010, 2023, 'dec'
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/fa27c1fd-de80-4eac-98b2-d0327b481949)
   3. Create a stored procedure to print the below mentioned bank statement
      ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
      ```sql
@@ -1878,8 +1905,9 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```
      Calling SP
      ```sql
-     exec sp_accdetail_txndetail_nooftxntype 1010, 2023, 'dec'
+     exec sp_get_bank_statement 1005, '2020-01-01', '2024-12-31'
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/d094210f-fe9d-4a67-be3e-efebe3106f5b)
      	
 	
       

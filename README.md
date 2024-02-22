@@ -1384,6 +1384,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
     ```sql
     select * from transaction_table where len(chq_no) < 6
     ```
+    ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/4b907306-8f55-465c-ba7a-88117c887643)
 11. If found then write a query to display required 0 before cheque number and make them a 6 digits long cheque number.
     ```sql
     select *,
@@ -1397,6 +1398,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
     end as full_chq_no
     from transaction_table
     ```
+    ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/caee96a8-4c22-4ffb-a769-c8ee2b842fcd)
 12. Find duplicate values in Account ID.
     ```sql
     with cte as (select acc_id, count(*) cnt from account_table group by acc_id)
@@ -1419,6 +1421,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
     select *, datediff(DD, chq_date, dot) chq_dt_diff from transaction_table
     where datediff(DD, chq_date, dot) > 180
     ```
+    ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/cfc56fff-7f1f-4c50-bfa5-d66754f6d100)
 16. Find a Cash Withdrawal happened more than 3 times in a single day.
     ```sql
     select acc_id, format(dot,'yyyy-MM-dd') dates, count(*) tran_nos from transaction_table
@@ -1459,7 +1462,8 @@ In the initial data preparation phase, we performed Data loading and inspection,
      Calling View
      ```sql
      select * from vw_acc_info
-     ```     
+     ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/6a9e4ef4-0159-48ef-be71-90e0ab8e74af)
   2. The account information includes the account number, name, date of last transaction, and total number of transactions in the account.
      ```sql
      create view vw_acc_last_and_total_txn
@@ -1478,6 +1482,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_acc_last_and_total_txn
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/343cb98a-af2c-4b1d-a6b9-29c8d36a7833)
   3. The sum of the uncleared balance can be calculated both branch-wise and product-wise.
      ```sql
      create view vw_br_prod_wise_unclr_bal
@@ -1489,6 +1494,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_br_prod_wise_unclr_bal
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/39cbfbcb-91be-453a-9fff-a408d37023d4)
   4. The transaction type and account wise sum of transaction amount for current month.
      ```sql
      create view vw_txn_type_accid_total_txn
@@ -1501,6 +1507,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_txn_type_accid_total_txn
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/a76786dc-4ee3-4524-94c3-b88cec5f8d21)
   5. Find number of transactions made by customers in last 6 months.
      ```sql
      create view vw_no_of_txn_last_6_mnth
@@ -1514,6 +1521,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_no_of_txn_last_6_mnth
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/b5443e90-f8bb-4a22-a829-e542ab85f591)
   6. Find branch wise number of customers.
      ```sql
      create view vw_no_of_cust_br_wise
@@ -1526,6 +1534,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      ```sql
      select * from vw_no_of_cust_br_wise
      ```
+     ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/7863c051-e614-421c-86ab-32ef5fd9d01a)
 
 - SQL Query requirements
   1. Provide a list of transactions that took place in a Branch during the previous month.

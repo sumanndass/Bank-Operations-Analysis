@@ -46,7 +46,8 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 
 ### Database Creation and Data Loading
 - ERD Modelling
-  - ![Bank_Operation_ERD_Model](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/8791c037-519e-4cc6-a0b6-a0ce1330b81c)
+
+  ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/fe9b1be1-c59a-4b10-9d8b-9b68a67c0b5e)
 - create a database named ‘bank’
    ```sql
    create database bank
@@ -76,6 +77,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
    ('CA', 'Current Account'),
    ('RD', 'Recurring Deposit')
    ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/1cc3ea0c-00da-4e71-b6d6-0dbb0e5dc42b)
 - create a 'region_table'
    - col_name – data_type - remarks
    - reg_id – integer – primary key
@@ -91,6 +93,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
    ```sql
    insert into region_table values(1, 'North'), (2, 'East'), (3, 'South'), (4, 'West')
    ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/a89c0a50-0789-4138-9718-56184e86d61b)
 - create a 'staff_table'
    - col_name – data_type - remarks
    - staff_id – interger – primary key
@@ -123,6 +126,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
   (14,'Karleigh Ranga', 'C'),
   (15,'Damian Raji', 'C')
    ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/167e3c1f-6a58-4727-9a4c-d4b8b23f8bd9)
 - create a 'branch_table'
    - col_name – data_type - remarks
    - br_id – maximum allowed 4 character – primary key
@@ -159,6 +163,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
   ('BR12', 'Mumbai', '11, Prakash, Banganga X Road, Malabar Hill', 'Maharashtra', '400006', 4),
   ('BR13', 'Jalandhar', 'WQ 265, Nr Adda Basti Sheikh', 'Punjab', '144002', 4)
    ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/4a9aee54-ce55-43cf-a118-95844ee08871)
 -  create a 'account_table'
    - col_name – data_type - remarks
    - acc_id – integer – primary key, starts from 1001 and increment by 1
@@ -292,6 +297,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
   ('Tate Ganesh','381-3927 Vivamus St.','Manipur','836042','BR9','LA','2021-12-18 10:05:08','169,397.23','28,592.83','O'),
   ('Charity Verma','Ap #470-1753 Velit. St.','Jammu and Kashmir','741523','BR2','RD','2019-12-27 04:27:35','339,853.34','94,498.43','I')
    ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/1c8fab98-34fa-42be-aac1-0e41a1d29bb2)
 - create a 'transaction_table'
    - col_name – data_type - remarks
    - tran_id – integer – primary key, starts from 1 and increment by 1
@@ -316,7 +322,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 	txn_amt	money		not null,
 	staff_id	int		not null foreign key references staff_table(staff_id) on delete cascade on update cascade
 	)
-   ```
+	```
 - Insert into 'transaction_table'
    ```sql
   insert into transaction_table values
@@ -1321,6 +1327,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 	('2020-12-11 01:43:41', 1001, 'BR3', 'CQD', 3471, '2020-06-24 15:11:54', 917107.71, 12), 
 	('2024-01-28 22:24:47', 1005, 'BR6', 'CQD', 309115, '2023-09-25 20:32:35', 619378.17, 12)
     ```
+   ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/d2e7190c-e686-4057-8907-ca9362261603)
 
 ### ﻿Data Cleaning or Preparation
 In the initial data preparation phase, we performed Data loading and inspection, Handling missing values, Data cleaning and formatting.

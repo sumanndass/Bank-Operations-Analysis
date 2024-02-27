@@ -317,12 +317,16 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 	acc_id		int		not null foreign key references account_table(acc_id),
 	br_id		varchar(4)	not null foreign key references branch_table(br_id) on delete cascade on update cascade,
 	txn_type	varchar(3)	not null check( txn_type in ('CW', 'CD', 'CQD')),
-	chq_no		varchar(6)	check(chq_no between 00000 and 999999),
+	chq_no		varchar(6)	check(chq_no between 00000 and 999999), check((txn_type = 'CQD' and chq_no is not null) or (txn_type <> 'CQD' and chq_no is null)),
 	chq_date	datetime,
 	txn_amt	money		not null,
 	staff_id	int		not null foreign key references staff_table(staff_id) on delete cascade on update cascade
 	)
 	```
+   ```sql
+   alter table transaction_table
+   add constraint chq_date_insert check((chq_no is not null and chq_date is not null) or (chq_no is null and chq_date is null))
+   ```  	
 - Insert into 'transaction_table'
    ```sql
   insert into transaction_table values

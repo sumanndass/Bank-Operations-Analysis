@@ -1,4 +1,4 @@
-# Bank Operation Analysis
+# Bank Operation Analysis - SQL & T-SQL Project
 ## Table of Content
 - [Overview](#overview)
 - [Business Integrity](#business-integrity)
@@ -37,8 +37,6 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
 ### Tools Used
 - SQL Server - Data Analysis, Data Cleaning -- [Download Here](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
 - T-SQL - Data Analysis, Reports -- [Download Here](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
-- Power BI - Reports, Visualization -- [Download Here](https://powerbi.microsoft.com/en-us/downloads/)
-- Excel - Data Loadings -- [Download Here](https://www.microsoft.com/en-us/microsoft-365/download-office)
 
 ### Database Creation and Data Loading
 - ERD Modelling

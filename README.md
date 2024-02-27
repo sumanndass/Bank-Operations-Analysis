@@ -6,11 +6,7 @@
 - [Database Creation and Data Loading](#database-creation-and-data-loading)
 - [﻿Data Cleaning or Preparation](﻿#data-cleaning-or-preparation)
 - [Explanatory Data Analysis](#explanatory-data-analysis)
-- [Result or Findings](#result-or-findings)
-- [Recommendations](#recommendations)
-- [Limitations](#limitations)
-- [References](#references)
-
+ 
 ### Overview
 End to end erd modelling, database creation, data loading, data cleaning, data visualization and reporting project on banking operations.
 

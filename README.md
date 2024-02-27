@@ -1937,19 +1937,3 @@ In the initial data preparation phase, we performed Data loading and inspection,
 
 ### Limitations
 I had to remove all zero values from budget and revenue columns because they would have affected the accuracy of my conclusions from the analysis. There are still a few outliers even after the omissions but even then we can still see that there is a positive correlation between both budget and number of votes with revenue
-
-### References
----
-1. [any link](www.google.com) or name of someone or anything
-
-🛕
-
-|heading1|heading|
-|--------|-------|
-|pythonn|sql|
-
-`comment1`
-
-**bold**
-
-*italic*

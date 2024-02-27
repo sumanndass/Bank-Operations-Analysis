@@ -1765,7 +1765,150 @@ In the initial data preparation phase, we performed Data loading and inspection,
   5. The policy prohibits more than three cash deposit transactions in a single account on the same day.
   6. The monthly transaction limit should be less than 5, and if it exceeds Rs. 50/= will be debited.
   7. The cash deposit transaction amount exceeding Rs. 500,000/= should be inserted into the 'High Value Transaction' table.
-  8. The daily maximum cash withdrawal limit is Rs.100,000/-, and any excess will result in a 1% of debit charge of transaction amount.
+     Trigger for 1 to 7
+     ```sql
+     Create trigger tg_Update_Insert_Delete
+     on transaction_table
+     after insert, update
+     as
+     begin
+     	declare @acc_id int
+     	declare @txn_type varchar(3)
+     	declare @txn_amt money
+     	declare @dot datetime
+     	select @acc_id = acc_id, @dot = dot, @txn_type = txn_type, @txn_amt = txn_amt from inserted
+
+     	declare @status char(1)
+     	declare @clr_bal money
+     	select @clr_bal = clr_bal, @status = status from account_table where acc_id = @acc_id
+
+     	if @status = 'O'
+     		begin
+     			if @txn_type = 'CW'
+     				begin
+     					if @clr_bal >= @txn_amt
+     						begin
+     							declare @cw_cnt int
+
+     							select @cw_cnt = count(*) from transaction_table
+     							where acc_id = @acc_id
+     							and format(@dot, 'yyyy-MM-dd') = format(getdate(), 'yyyy-MM-dd')
+     							and txn_type = 'CW'
+
+     							if @cw_cnt < 3
+     								begin
+     									if @txn_amt >= 500000
+     										begin
+     											set identity_insert high_tran on
+     											insert into high_tran (tran_id, dot, acc_id, br_id, txn_type, chq_no, chq_date, txn_amt, staff_id)
+     											select tran_id, dot, acc_id, br_id, txn_type, chq_no, chq_date, txn_amt, staff_id from inserted
+
+     											update account_table
+     											set clr_bal = clr_bal - @txn_amt - (@txn_amt * 0.01)
+     											where acc_id = @acc_id
+     										end
+     									else
+     										begin
+     											if @txn_amt >= 100000
+     												begin
+     													update account_table
+     													set clr_bal = clr_bal - @txn_amt - (@txn_amt * 0.01)
+     													where acc_id = @acc_id
+     												end
+     											else
+     												begin
+     													update account_table
+     													set clr_bal = clr_bal - @txn_amt where acc_id = @acc_id
+     												end
+     										end
+     								end
+     							else
+     								begin
+     									print('maximum cash withdrawal limits exceeds, transaction declined')
+     									rollback
+     								end
+     						end
+     					else
+     						begin
+     							print('insufficient funds, transaction declined')
+     							rollback
+     						end
+     				end
+     			else
+     				begin
+     					declare @cd_cqd_cnt int
+
+     					select @cd_cqd_cnt = count(*) from transaction_table
+     					where acc_id = @acc_id
+     					and format(@dot, 'yyyy-MM-dd') = format(getdate(), 'yyyy-MM-dd')
+     					and txn_type in('CD', 'CQD')
+
+     					if @cd_cqd_cnt > 3
+     						begin
+     							print('maximum cash deposit limits exceeds, transaction declined')
+     							rollback
+     						end
+     					else
+     						begin
+     							if @txn_amt >= 500000
+     								begin
+     									update account_table
+     									set clr_bal = clr_bal + @txn_amt where acc_id = @acc_id
+
+     									set identity_insert high_tran on
+     									insert into high_tran (tran_id, dot, acc_id, br_id, txn_type, chq_no, chq_date, txn_amt, staff_id)
+     									select tran_id, dot, acc_id, br_id, txn_type, chq_no, chq_date, txn_amt, staff_id from inserted
+     								end
+     							else
+     								begin
+     									update account_table
+     									set clr_bal = clr_bal + @txn_amt where acc_id = @acc_id
+     								end
+     						end
+     				end
+     		end
+     	else
+     		begin
+     			print('account is inoperative/closed, please contact to bank')
+     			rollback
+     		end
+     end
+     ```
+  9. The daily maximum cash withdrawal limit is Rs.100,000/-, and any excess will result in a 1% of debit charge of transaction amount.
+      ```sql
+      create trigger tg_monthly_tran
+      on transaction_table
+      after insert, update
+      as
+      begin
+      	declare @acc_id int
+      	declare @txn_type varchar(3)
+      	declare @txn_amt money
+      	declare @dot datetime
+      	select @acc_id = acc_id, @dot = dot, @txn_type = txn_type, @txn_amt = txn_amt from inserted
+
+      	declare @mnth_cnt int
+      	select @mnth_cnt =  count(*) from transaction_table
+      	where cast(@dot as date) = cast(getdate() as date) and @acc_id = acc_id
+
+      	if @mnth_cnt < 5
+      		begin
+      			print('transaction successful')
+      		end
+      	else
+      		begin
+      			update account_table
+      			set clr_bal = clr_bal - 50
+
+      			print('INR 50 debited from your bank as monthly 5 transactions exceed')
+      		end
+      end
+      ```
+      Ordering Triggers' firing Sequence
+     ```sql
+     sp_settriggerorder @triggername = 'tg_Update_Insert_Delete', @order = 'first', @stmttype = 'insert', @namespace = null
+     sp_settriggerorder @triggername = 'tg_monthly_tran', @order = 'last', @stmttype = 'insert', @namespace = null
+     ```
 
 - T-SQL / Stored Procedure requirements
   1. Create a stored procedure to get the customer’s name, cleared and uncleared balance for a given account id.

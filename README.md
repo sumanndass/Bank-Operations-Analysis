@@ -1922,18 +1922,3 @@ In the initial data preparation phase, we performed Data loading and inspection,
      exec sp_get_bank_statement 1005, '2020-01-01', '2024-12-31'
      ```
      ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/d094210f-fe9d-4a67-be3e-efebe3106f5b)
-     	
-	
-      
-### Result or Findings
-1. The analysis results are summarized as follows:
-2. The company's sales have been steadily increasing over the past year, with a noticeable peak during the holiday season.
-3. Product Category A is the best-performing category in terms of sales and revenue. Customer segments with high lifetime value (LTV) should be targeted for marketing efforts.
-
-### Recommendations
-1. Based on the analysis, we recommend the following actions:
-2. Invest in marketing and promotions during peak sales seasons to maximize revenue. Focus on expanding and promoting products in Category A.
-3. Implement a customer segmentation strategy to target high-LTV customers effectively.
-
-### Limitations
-I had to remove all zero values from budget and revenue columns because they would have affected the accuracy of my conclusions from the analysis. There are still a few outliers even after the omissions but even then we can still see that there is a positive correlation between both budget and number of votes with revenue

@@ -1763,8 +1763,8 @@ In the initial data preparation phase, we performed Data loading and inspection,
   3. If the account does not have a minimum balance, withdrawals should be prohibited and an appropriate message should be displayed.
   4. The policy prohibits more than three cash withdrawal transactions in a single account on the same day.
   5. The policy prohibits more than three cash deposit transactions in a single account on the same day.
-  6. The monthly transaction limit should be less than 5, and if it exceeds Rs. 50/= will be debited.
-  7. The cash deposit transaction amount exceeding Rs. 500,000/= should be inserted into the 'High Value Transaction' table.
+  6. The cash deposit transaction amount exceeding Rs. 500,000/= should be inserted into the 'High Value Transaction' table.
+  7. The daily maximum cash withdrawal limit is Rs.100,000/-, and any excess will result in a 1% of debit charge of transaction amount.
      Trigger for 1 to 7
      ```sql
      Create trigger tg_Update_Insert_Delete
@@ -1874,7 +1874,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
      		end
      end
      ```
-  9. The daily maximum cash withdrawal limit is Rs.100,000/-, and any excess will result in a 1% of debit charge of transaction amount.
+  8. The monthly transaction limit should be less than 5, and if it exceeds Rs. 50/= will be debited.
       ```sql
       create trigger tg_monthly_tran
       on transaction_table
@@ -1889,7 +1889,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
 
       	declare @mnth_cnt int
       	select @mnth_cnt =  count(*) from transaction_table
-      	where cast(@dot as date) = cast(getdate() as date) and @acc_id = acc_id
+      	where format(@dot, 'yyyy-MM') = format(getdate(), 'yyyy-MM') and @acc_id = acc_id
 
       	if @mnth_cnt < 5
       		begin

@@ -1757,7 +1757,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
          ```
          ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/9bdc50e2-97ee-404d-b141-43f8b536b392)
 
-- Tigger requirements
+- SQL Tigger requirements
   1. Accounts marked as "Inoperative" or "Closed" should not be used for transactions.
   2. The 'Account Table' should be updated implicitly when an account transaction amount is inserted or updated.
   3. If the account does not have a minimum balance, withdrawals should be prohibited and an appropriate message should be displayed.

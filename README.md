@@ -1761,7 +1761,17 @@ In the initial data preparation phase, we performed Data loading and inspection,
          ```
          ![image](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/9bdc50e2-97ee-404d-b141-43f8b536b392)
 
-- SQL T-SQL / Stored Procedure requirements
+- Tigger requirements
+  1. Accounts marked as "Inoperative" or "Closed" should not be used for transactions.
+  2. The 'Account Table' should be updated implicitly when an account transaction amount is inserted or updated.
+  3. If the account does not have a minimum balance, withdrawals should be prohibited and an appropriate message should be displayed.
+  4. The policy prohibits more than three cash withdrawal transactions in a single account on the same day.
+  5. The policy prohibits more than three cash deposit transactions in a single account on the same day.
+  6. The monthly transaction limit should be less than 5, and if it exceeds Rs. 50/= will be debited.
+  7. The cash deposit transaction amount exceeding Rs. 500,000/= should be inserted into the 'High Value Transaction' table.
+  8. The daily maximum cash withdrawal limit is Rs.100,000/-, and any excess will result in a 1% of debit charge of transaction amount.
+
+- T-SQL / Stored Procedure requirements
   1. Create a stored procedure to get the customer’s name, cleared and uncleared balance for a given account id.
      ```s
      create proc sp_getaccinfo

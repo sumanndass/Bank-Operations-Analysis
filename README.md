@@ -1968,7 +1968,7 @@ In the initial data preparation phase, we performed Data loading and inspection,
   3. Create a stored procedure to print the below mentioned bank statement
      ![stored_procedure_requirements](https://github.com/sumanndass/Bank-Operations-Analysis/assets/156992689/5e3136ea-c67f-4805-85fe-3d70a5d58016)
      ```sql
-     alter proc [dbo].[sp_get_bank_statement]
+     create proc [dbo].[sp_get_bank_statement]
      (
      	@acc_id int,
      	@fromdate datetime,

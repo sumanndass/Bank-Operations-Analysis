@@ -142,7 +142,7 @@ End to end erd modelling, database creation, data loading, data cleaning, data v
    ```
 - Insert into 'branch_table'
    ```sql
-   insert into staff_table values
+   insert into branch_table values
   ('BR1', 'Delhi', '248, Sant Nagar, East Of Kailash', 'New Delhi', '110065', 1),
   ('BR2', 'Kolkata', 'Y8, Block - EP, Sector V Salt Lake', 'West Bengal', '700091', 2),
   ('BR3', 'Haryana', 'B 448 1st Floor, Nehru Ground', 'Haryana', '122001', 1),

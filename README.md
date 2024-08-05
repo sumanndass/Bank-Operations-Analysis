@@ -8,7 +8,7 @@
 - [Explanatory Data Analysis](#explanatory-data-analysis)
  
 ### Overview
-End to end erd modelling, database creation, data loading, data cleaning, data visualization and reporting project on banking operations.
+End to end ERD modelling, database creation, data loading, data cleaning, data visualization and reporting project on banking operations.
 
 ### Business Integrity
 1.	Bank offers 5 kinds of products. Like Fixed Deposit (FD), Loan Account (LA), Savings Bank (SB), Current Account (CA), Recurring Deposit (RD). Product table has Product ID, Product Name columns.
